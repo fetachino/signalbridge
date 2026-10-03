@@ -33,6 +33,7 @@ import {
 import { buildDetectionTrace } from './lib/detectionPipeline'
 import { analyzeFrame, createSyntheticAlertFrame, type FrameAnalysis } from './lib/frameAnalysis'
 import { analyzeFrameWithOpenCv } from './lib/opencvAdapter'
+import { recognizeAlertText, type OcrResult } from './lib/ocrAdapter'
 import { usePersistentState } from './lib/usePersistentState'
 
 type Alert = {
@@ -114,6 +115,7 @@ function App() {
   const [reducedMotion, setReducedMotion] = usePersistentState('signalbridge.reducedMotion', false)
   const [scanState, setScanState] = useState<'ready' | 'scanning'>('ready')
   const [frameAnalysis, setFrameAnalysis] = useState<FrameAnalysis | null>(null)
+  const [ocrResult, setOcrResult] = useState<OcrResult | null>(null)
   const [showDetails, setShowDetails] = useState(true)
   const alert = alerts[selected]
   const Icon = alert.icon
@@ -159,11 +161,13 @@ function App() {
     setReducedMotion(false)
     setScanState('ready')
     setFrameAnalysis(null)
+    setOcrResult(null)
   }
 
   function scanFrame() {
     if (scanState === 'scanning') return
     setScanState('scanning')
+    setOcrResult(null)
     window.setTimeout(async () => {
       const processingStarted = performance.now()
       const frame = createSyntheticAlertFrame(alert.label, 320, 180)
@@ -172,6 +176,7 @@ function App() {
       } catch {
         setFrameAnalysis({ ...analyzeFrame(frame.data, frame.width, frame.height), processingMs: Math.round(performance.now() - processingStarted) })
       }
+      setOcrResult(await recognizeAlertText(frame, alert.label))
       setScanState('ready')
     }, 700)
   }
@@ -256,6 +261,7 @@ function App() {
             <button className="subtle-button" onClick={() => setShowDetails(!showDetails)}>{showDetails ? 'Hide' : 'Show'} overlay</button>
           </div>
           {frameAnalysis && <div className="frame-analysis" aria-live="polite"><span className="frame-analysis-label"><Sparkles size={13} /> {frameAnalysis.engine === 'opencv' ? 'OPENCV CANNY' : 'CANVAS FALLBACK'}</span><span><b>{frameAnalysis.edgeDensity}%</b> edge density</span><span><b>{frameAnalysis.textContrast}%</b> text contrast</span><span><b>{frameAnalysis.signalScore}%</b> signal score</span><span className="frame-time">{frameAnalysis.processingMs} ms</span></div>}
+          {ocrResult && <div className="ocr-result" aria-live="polite"><span className="ocr-result-label">{ocrResult.engine === 'tesseract' ? 'OCR EXTRACTED TEXT' : 'FIXTURE TEXT'}</span><span className="ocr-result-text">“{ocrResult.text}”</span><span className="ocr-confidence">{ocrResult.confidence}% confidence</span></div>}
         </div>
 
         <div className="alert-card" style={{ '--accent': alert.accent } as CSSProperties}>
