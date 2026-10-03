@@ -27,6 +27,8 @@ This first slice is a polished, browser-verifiable TV experience shell. It inclu
 - Transparent detection trace with confidence indicators
 - Read-aloud guidance using the browser speech engine
 - Large-text accessibility mode
+- Persistent accessibility preferences across sessions
+- Replaceable detection-pipeline contract with a live scan state
 - Alert history and source verification states
 
 The prototype is intentionally honest about its current state. The detection trace uses curated demo scenarios while the Fire TV runtime, real frame processing, OCR, and alert classification are being implemented.
@@ -77,6 +79,7 @@ SignalBridge is built by [Ahmed Balde](https://github.com/fetachino), a software
 ## Repository guide
 
 - [Architecture notes](docs/architecture.md)
+- [Fire TV and Vega port boundary](docs/fire-tv-port.md)
 - [Roadmap](docs/ROADMAP.md)
 - [Contribution guide](CONTRIBUTING.md)
 

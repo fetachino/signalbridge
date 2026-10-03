@@ -31,6 +31,7 @@ import {
   Waves,
 } from 'lucide-react'
 import { buildDetectionTrace } from './lib/detectionPipeline'
+import { usePersistentState } from './lib/usePersistentState'
 
 type Alert = {
   id: string
@@ -104,11 +105,11 @@ function App() {
   const [selected, setSelected] = useState(0)
   const [playing, setPlaying] = useState(true)
   const [spoken, setSpoken] = useState(false)
-  const [largeText, setLargeText] = useState(false)
-  const [highContrast, setHighContrast] = useState(false)
-  const [captions, setCaptions] = useState(true)
-  const [autoRead, setAutoRead] = useState(false)
-  const [reducedMotion, setReducedMotion] = useState(false)
+  const [largeText, setLargeText] = usePersistentState('signalbridge.largeText', false)
+  const [highContrast, setHighContrast] = usePersistentState('signalbridge.highContrast', false)
+  const [captions, setCaptions] = usePersistentState('signalbridge.captions', true)
+  const [autoRead, setAutoRead] = usePersistentState('signalbridge.autoRead', false)
+  const [reducedMotion, setReducedMotion] = usePersistentState('signalbridge.reducedMotion', false)
   const [scanState, setScanState] = useState<'ready' | 'scanning'>('ready')
   const [showDetails, setShowDetails] = useState(true)
   const alert = alerts[selected]
@@ -244,7 +245,7 @@ function App() {
 
       <section className={screen === 'monitor' ? 'lower-grid' : 'lower-grid hidden-screen'}>
         <div className="panel detection-panel">
-          <div className="panel-heading"><div><span className="eyebrow">TRANSPARENT AI</span><h2>Detection trace</h2></div><span className="processing"><Sparkles size={14} /> {scanState === 'scanning' ? 'Scanning frame' : 'Ready for next frame'}</span></div>
+          <div className="panel-heading"><div><span className="eyebrow">TRANSPARENT AI</span><h2>Detection trace</h2></div><span className="processing" aria-live="polite"><Sparkles size={14} /> {scanState === 'scanning' ? 'Scanning frame' : 'Ready for next frame'}</span></div>
           <div className="trace-flow">{detection.stages.map((stage, index) => <span className="trace-step" key={stage.label}><span className={`trace-node ${stage.status}`}>{stage.label}</span>{index < detection.stages.length - 1 && <span className={stage.status === 'pending' ? 'trace-line' : 'trace-line active'} />}</span>)}</div>
           <div className="trace-table">{detection.evidence.map((row) => <div className="trace-row" key={row.name}><span>{row.name}</span><b>{row.result}</b><em>{row.confidence}</em></div>)}</div>
           <p className="panel-note"><CircleHelp size={14} /> {detection.explanation} SignalBridge shows its evidence so viewers can decide whether to trust the guidance.</p>
