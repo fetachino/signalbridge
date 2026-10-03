@@ -22,8 +22,10 @@
     "typescript"
   ],
   "dependencies": {
+    "@techstark/opencv-js": "^5.0.0-release.1",
     "@vitejs/plugin-react": "latest",
     "lucide-react": "latest",
+    "@techstark/opencv-js": "^5.0.0-release.1",
     "react": "latest",
     "react-dom": "latest",
     "typescript": "latest",

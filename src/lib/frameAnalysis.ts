@@ -5,6 +5,7 @@ export type FrameAnalysis = {
   textContrast: number
   signalScore: number
   processingMs: number
+  engine: 'canvas' | 'opencv'
 }
 
 /**
@@ -39,7 +40,7 @@ export function analyzeFrame(pixels: Uint8ClampedArray, width: number, height: n
   const textContrast = Math.min(100, Math.round((averageContrast / 64) * 100))
   const signalScore = Math.min(99, Math.max(1, Math.round(edgeDensity * 0.6 + textContrast * 1.8)))
 
-  return { width, height, edgeDensity, textContrast, signalScore, processingMs: 0 }
+  return { width, height, edgeDensity, textContrast, signalScore, processingMs: 0, engine: 'canvas' }
 }
 
 export function createSyntheticAlertFrame(label: string, width = 640, height = 360): ImageData {

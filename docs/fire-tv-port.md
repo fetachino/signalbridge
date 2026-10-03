@@ -32,7 +32,7 @@ Evidence image   extracted text      severity + location
          visual overlay + captions + speech
 ```
 
-The current `src/lib/detectionPipeline.ts` is deliberately deterministic, while `src/lib/frameAnalysis.ts` provides lightweight canvas pixel metrics for the browser package. These are seams for adding OpenCV preprocessing, OCR, and classification without coupling those dependencies to TV navigation.
+The current `src/lib/detectionPipeline.ts` is deliberately deterministic, while `src/lib/frameAnalysis.ts` provides lightweight canvas pixel metrics and `src/lib/opencvAdapter.ts` runs lazy-loaded OpenCV.js Canny edge detection for the browser package. These are seams for adding native OpenCV preprocessing, OCR, and classification without coupling those dependencies to TV navigation.
 
 ## Device handoff checklist
 

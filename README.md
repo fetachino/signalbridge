@@ -32,9 +32,10 @@ This first slice is a polished, browser-verifiable TV experience shell. It inclu
 - Optional automatic read-aloud for critical alerts
 - Replaceable detection-pipeline contract with a live scan state
 - Local frame-preprocessing telemetry for edge density, contrast, and processing time
+- Lazy OpenCV.js Canny edge detection with a canvas fallback for unsupported WebViews
 - Alert history and source verification states
 
-The prototype is intentionally honest about its current state. The detection trace uses curated demo scenarios and lightweight canvas frame preprocessing. The Fire TV runtime, OpenCV preprocessing, OCR, and alert classification are still being implemented behind the documented pipeline boundary.
+The prototype is intentionally honest about its current state. The alert scenarios and OCR/classification outputs are curated fixtures, while the frame scan now runs real lazy-loaded OpenCV.js Canny edge detection with a canvas fallback. Native Fire TV integration, production OCR, and alert classification remain behind the documented pipeline boundary.
 
 The next implementation milestone is replacing the curated detection trace with real frame processing, OCR, and alert classification in the Fire TV runtime. The Amazon reference apps show the production direction we are targeting: shared TV components, platform-specific Fire TV/Vega builds, proper focus management, real media playback, and catalog-backed content.
 
