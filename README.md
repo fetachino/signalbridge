@@ -64,9 +64,10 @@ Open the local URL shown by Vite. The app is designed for a 16:9 TV viewport and
 
 ```bash
 npm run build
+npm test
 ```
 
-The build runs in GitHub Actions on every push and pull request. The local prototype has been verified through the home screen, live monitor, alert history, large-text mode, alert switching, and read-aloud interaction.
+The build and detection-pipeline tests run in GitHub Actions on every push and pull request. The local prototype has been verified through the home screen, live monitor, alert history, accessibility controls, preference persistence, alert switching, scan interaction, and read-aloud interaction.
 
 ## Submission direction
 
@@ -80,6 +81,7 @@ SignalBridge is built by [Ahmed Balde](https://github.com/fetachino), a software
 
 - [Architecture notes](docs/architecture.md)
 - [Fire TV and Vega port boundary](docs/fire-tv-port.md)
+- [Hackathon submission checklist](docs/submission-checklist.md)
 - [Roadmap](docs/ROADMAP.md)
 - [Contribution guide](CONTRIBUTING.md)
 

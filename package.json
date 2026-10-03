@@ -8,9 +8,17 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "test": "vitest run"
   },
-  "keywords": ["fire-tv", "vega", "accessibility", "computer-vision", "react", "typescript"],
+  "keywords": [
+    "fire-tv",
+    "vega",
+    "accessibility",
+    "computer-vision",
+    "react",
+    "typescript"
+  ],
   "dependencies": {
     "@vitejs/plugin-react": "latest",
     "lucide-react": "latest",
@@ -22,6 +30,7 @@
   "devDependencies": {
     "@types/node": "^26.6.4",
     "@types/react": "^19.3.0",
-    "@types/react-dom": "^19.3.0"
+    "@types/react-dom": "^19.3.0",
+    "vitest": "^5.0.3"
   }
 }
