@@ -5,5 +5,7 @@ dist/
 .tmp/
 artifacts/*.zip
 artifacts/signalbridge-demo.mp4
+artifacts/android-tv-emulator-window.png
+artifacts/desktop-emulator-frame.png
 artifacts/tv-screen.png
 artifacts/tv-scan-result-good.png
