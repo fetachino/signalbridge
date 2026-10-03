@@ -19,11 +19,10 @@ Emergency and public-service information is often presented as small text, short
 
 This first slice is a polished, browser-verifiable TV experience shell. It includes:
 
-- TV-style home screen with hero messaging and feature rails
+- TV-first home screen with a full-bleed severe-weather hero and content rails
 - Primary navigation for Home, Live Monitor, and Alert History
-- Remote-friendly, focusable actions and large 16:9 layout
-- Arrow-key remote navigation between alert scenarios
-- A live-feed style alert monitor
+- Remote-friendly, focusable actions with a clear D-pad focus model
+- A cinematic live-feed monitor with an alert overlay instead of a dashboard layout
 - Three realistic emergency and community alert scenarios
 - Transparent detection trace with confidence indicators
 - Read-aloud guidance using the browser speech engine

@@ -103,20 +103,35 @@ const severityCopy = {
   info: 'NOTICE',
 }
 
-type RemoteTarget = 'nav-home' | 'nav-monitor' | 'nav-history' | 'nav-accessibility' | 'scan' | 'read-aloud' | 'large-text'
+type RemoteTarget =
+  | 'nav-home'
+  | 'nav-monitor'
+  | 'nav-history'
+  | 'nav-accessibility'
+  | 'home-watch'
+  | 'home-tornado'
+  | 'home-flood'
+  | 'home-shelter'
+  | 'scan'
+  | 'read-aloud'
+  | 'large-text'
 
 const remoteTargetLabels: Record<RemoteTarget, string> = {
   'nav-home': 'Home',
   'nav-monitor': 'Live monitor',
   'nav-history': 'Alert history',
   'nav-accessibility': 'Accessibility',
+  'home-watch': 'Watch live safety feed',
+  'home-tornado': 'Tornado warning story',
+  'home-flood': 'Flood watch story',
+  'home-shelter': 'Community notice story',
   scan: 'Scan frame',
   'read-aloud': 'Read this aloud',
   'large-text': 'Large text',
 }
 
 function App() {
-  const [screen, setScreen] = useState<'home' | 'monitor' | 'history' | 'settings'>('monitor')
+  const [screen, setScreen] = useState<'home' | 'monitor' | 'history' | 'settings'>('home')
   const [menuOpen, setMenuOpen] = useState(false)
   const [selected, setSelected] = useState(0)
   const [playing, setPlaying] = useState(true)
@@ -130,13 +145,17 @@ function App() {
   const [frameAnalysis, setFrameAnalysis] = useState<FrameAnalysis | null>(null)
   const [ocrResult, setOcrResult] = useState<OcrResult | null>(null)
   const [extractedAlert, setExtractedAlert] = useState<ExtractedAlert | null>(null)
-  const [showDetails, setShowDetails] = useState(true)
-  const [remoteTarget, setRemoteTarget] = useState<RemoteTarget>('nav-monitor')
+  const [showDetails, setShowDetails] = useState(false)
+  const [remoteTarget, setRemoteTarget] = useState<RemoteTarget>('nav-home')
   const remoteRefs = useRef<Record<RemoteTarget, HTMLButtonElement | null>>({
     'nav-home': null,
     'nav-monitor': null,
     'nav-history': null,
     'nav-accessibility': null,
+    'home-watch': null,
+    'home-tornado': null,
+    'home-flood': null,
+    'home-shelter': null,
     scan: null,
     'read-aloud': null,
     'large-text': null,
@@ -163,31 +182,56 @@ function App() {
 
   useEffect(() => {
     function handleRemoteKey(event: KeyboardEvent) {
+      const isLeft = event.key === 'ArrowLeft' || event.key === 'Left' || event.keyCode === 37
+      const isUp = event.key === 'ArrowUp' || event.key === 'Up' || event.keyCode === 38
+      const isRight = event.key === 'ArrowRight' || event.key === 'Right' || event.keyCode === 39
+      const isDown = event.key === 'ArrowDown' || event.key === 'Down' || event.keyCode === 40
       const navTargets: RemoteTarget[] = ['nav-home', 'nav-monitor', 'nav-history', 'nav-accessibility']
+      const homeTargets: RemoteTarget[] = ['home-watch', 'home-tornado', 'home-flood', 'home-shelter']
       const monitorTargets: RemoteTarget[] = ['scan', 'read-aloud', 'large-text']
-      const activeTargets = monitorTargets.includes(remoteTarget) ? monitorTargets : navTargets
+      const activeTargets = homeTargets.includes(remoteTarget)
+        ? homeTargets
+        : monitorTargets.includes(remoteTarget)
+          ? monitorTargets
+          : navTargets
       const currentIndex = activeTargets.indexOf(remoteTarget)
 
-      if (event.key === 'ArrowLeft' || event.key === 'ArrowUp') {
+      if (isLeft) {
         if (currentIndex > 0) {
           event.preventDefault()
           focusRemoteTarget(activeTargets[currentIndex - 1])
-        } else if (monitorTargets.includes(remoteTarget)) {
-          event.preventDefault()
-          focusRemoteTarget('nav-monitor')
         }
         return
       }
 
-      if (event.key === 'ArrowRight' || event.key === 'ArrowDown') {
-        if (remoteTarget === 'nav-monitor' && event.key === 'ArrowDown') {
+      if (isRight) {
+        if (currentIndex < activeTargets.length - 1) {
+          event.preventDefault()
+          focusRemoteTarget(activeTargets[currentIndex + 1])
+        }
+        return
+      }
+
+      if (isDown) {
+        if (remoteTarget === 'nav-monitor') {
           event.preventDefault()
           focusRemoteTarget('scan')
           return
         }
-        if (currentIndex < activeTargets.length - 1) {
+        if (remoteTarget === 'nav-home') {
           event.preventDefault()
-          focusRemoteTarget(activeTargets[currentIndex + 1])
+          focusRemoteTarget('home-watch')
+        }
+        return
+      }
+
+      if (isUp) {
+        if (homeTargets.includes(remoteTarget)) {
+          event.preventDefault()
+          focusRemoteTarget('nav-home')
+        } else if (monitorTargets.includes(remoteTarget)) {
+          event.preventDefault()
+          focusRemoteTarget('nav-monitor')
         }
         return
       }
@@ -198,6 +242,25 @@ function App() {
         if (remoteTarget === 'nav-monitor') setScreen('monitor')
         if (remoteTarget === 'nav-history') setScreen('history')
         if (remoteTarget === 'nav-accessibility') setScreen('settings')
+        if (remoteTarget === 'home-watch') {
+          setScreen('monitor')
+          focusRemoteTarget('nav-monitor')
+        }
+        if (remoteTarget === 'home-tornado') {
+          setSelected(0)
+          setScreen('monitor')
+          focusRemoteTarget('nav-monitor')
+        }
+        if (remoteTarget === 'home-flood') {
+          setSelected(1)
+          setScreen('monitor')
+          focusRemoteTarget('nav-monitor')
+        }
+        if (remoteTarget === 'home-shelter') {
+          setSelected(2)
+          setScreen('monitor')
+          focusRemoteTarget('nav-monitor')
+        }
         if (remoteTarget === 'scan') scanFrame()
         if (remoteTarget === 'read-aloud') speakAlert()
         if (remoteTarget === 'large-text') setLargeText((current) => !current)
@@ -221,7 +284,7 @@ function App() {
   }, [remoteTarget, scanState])
 
   useEffect(() => {
-    window.requestAnimationFrame(() => remoteRefs.current['nav-monitor']?.focus())
+    window.requestAnimationFrame(() => remoteRefs.current['nav-home']?.focus())
   }, [])
 
   useEffect(() => {
@@ -233,7 +296,7 @@ function App() {
     setPlaying(true)
     setSpoken(false)
     setLargeText(false)
-    setShowDetails(true)
+    setShowDetails(false)
     setHighContrast(false)
     setCaptions(true)
     setAutoRead(false)
@@ -247,6 +310,7 @@ function App() {
   function scanFrame() {
     if (scanState === 'scanning') return
     setScanState('scanning')
+    setShowDetails(true)
     setOcrResult(null)
     setExtractedAlert(null)
     window.setTimeout(async () => {
@@ -277,7 +341,7 @@ function App() {
             <div className="brand-subtitle">FIRE TV ACCESSIBILITY LAYER</div>
           </div>
         </div>
-        <div className="top-status"><span className="live-dot" /> Broadcast monitor active <span className="divider" /> Indianapolis, IN</div>
+        <div className="top-status"><span className="live-dot" /> Live safety channel <span className="divider" /> Indianapolis, IN</div>
         <button className="top-action" onClick={() => setScreen('history')}><Bell size={16} /> 3 alerts</button>
         <button className="top-action" onClick={() => setScreen('settings')}><Settings size={16} /> Preferences</button>
         <button className="icon-button" onClick={reset} aria-label="Reset demo"><RotateCcw size={18} /></button>
@@ -294,12 +358,12 @@ function App() {
 
       <section className="home-screen" style={{ display: screen === 'home' ? 'block' : 'none' }}>
         <div className="home-hero">
-          <div className="home-hero-copy"><span className="eyebrow">YOUR SAFETY LAYER</span><h1>Never miss the message behind the message.</h1><p>SignalBridge turns fast, visual broadcast alerts into calm, actionable guidance designed for the living room.</p><button className="primary-action home-cta" onClick={() => setScreen('monitor')}>Open live monitor <ArrowUpRight size={17} /></button></div>
+          <div className="home-hero-copy"><span className="eyebrow">LIVE SAFETY CHANNEL</span><h1>Weather that speaks clearly.</h1><p>SignalBridge catches critical moments in a live broadcast and turns them into calm, accessible guidance for everyone in the room.</p><div className="home-hero-actions"><button ref={(element) => { remoteRefs.current['home-watch'] = element }} className={`primary-action home-cta${remoteTarget === 'home-watch' ? ' remote-focus' : ''}`} onClick={() => setScreen('monitor')}><Play size={17} fill="currentColor" /> Watch live safety feed</button><span className="hero-meta"><span className="live-dot" /> Monitoring now</span></div></div>
           <div className="home-hero-art"><div className="hero-ring ring-one" /><div className="hero-ring ring-two" /><div className="hero-signal"><Waves size={40} /><span>ALERT<br />READY</span></div><div className="hero-chip chip-top"><ShieldCheck size={14} /> Source verified</div><div className="hero-chip chip-bottom"><Volume2 size={14} /> Spoken guidance</div></div>
         </div>
         <div className="home-metrics"><div><Gauge size={18} /><strong>98.4%</strong><span>signal readability</span></div><div><Accessibility size={18} /><strong>3 modes</strong><span>visual, caption, voice</span></div><div><CheckCircle2 size={18} /><strong>Verified</strong><span>source-aware guidance</span></div></div>
         <div className="home-section-heading"><div><span className="eyebrow">SIGNALBRIDGE LIBRARY</span><h2>Designed around real moments</h2></div><button className="subtle-button" onClick={() => setScreen('history')}>View all <ChevronRight size={14} /></button></div>
-        <div className="home-rail">{alerts.map((item, index) => { const ItemIcon = item.icon; return <button className="feature-card" key={item.id} onClick={() => { setSelected(index); setScreen('monitor') }}><span className="feature-icon" style={{ color: item.accent }}><ItemIcon size={24} /></span><span className="feature-kicker">{severityCopy[item.severity]}</span><strong>{item.title}</strong><small>{item.location}</small><span className="feature-arrow"><ArrowUpRight size={16} /></span></button> })}</div>
+        <div className="home-rail">{alerts.map((item, index) => { const ItemIcon = item.icon; const target = ['home-tornado', 'home-flood', 'home-shelter'][index] as RemoteTarget; return <button ref={(element) => { remoteRefs.current[target] = element }} className={`feature-card${remoteTarget === target ? ' remote-focus' : ''}`} key={item.id} onClick={() => { setSelected(index); setScreen('monitor') }}><span className="feature-icon" style={{ color: item.accent }}><ItemIcon size={24} /></span><span className="feature-kicker">{severityCopy[item.severity]}</span><strong>{item.title}</strong><small>{item.location}</small><span className="feature-arrow"><ArrowUpRight size={16} /></span></button> })}</div>
       </section>
 
       <section className="settings-screen" style={{ display: screen === 'settings' ? 'block' : 'none' }}>
@@ -325,12 +389,12 @@ function App() {
         <div className="video-card">
           <div className="video-toolbar">
             <span className="live-pill"><Radio size={14} /> LIVE FEED</span>
-            <span className="feed-name">WISH 8 WEATHER DESK</span>
+            <span className="feed-name">MIDWEST WEATHER NETWORK</span>
             <span className="feed-time">20:42:18</span>
           </div>
           <div className="broadcast-scene">
             <div className="scene-grid" />
-            <div className="weather-bug"><span>WISH 8</span><b>WEATHER</b></div>
+            <div className="weather-bug"><span>MWN</span><b>LIVE WEATHER</b></div>
             <div className="radar-orb"><div className="radar-sweep" /><span>LIVE RADAR</span></div>
             <div className="broadcast-copy"><span>SEVERE WEATHER UPDATE</span><strong>Stay alert. Conditions changing.</strong></div>
             {showDetails && <div className="detected-box"><span>OpenCV detection region</span><i /></div>}
