@@ -2,12 +2,15 @@
   "name": "signalbridge",
   "private": true,
   "version": "0.1.0",
+  "author": "Ahmed Balde (fetachino)",
+  "description": "Accessibility-first Fire TV prototype for turning broadcast alerts into clear spoken and visual guidance.",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
     "preview": "vite preview"
   },
+  "keywords": ["fire-tv", "vega", "accessibility", "computer-vision", "react", "typescript"],
   "dependencies": {
     "@vitejs/plugin-react": "latest",
     "lucide-react": "latest",

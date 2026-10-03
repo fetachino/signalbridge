@@ -1,15 +1,19 @@
-import { type CSSProperties, useMemo, useState } from 'react'
+import { type CSSProperties, type ReactNode, useMemo, useState } from 'react'
 import {
   AlertTriangle,
   ArrowUpRight,
   AudioLines,
   Bell,
+  Captions,
   Check,
+  CheckCircle2,
   ChevronLeft,
   ChevronRight,
   CircleHelp,
+  Contrast,
   CloudRain,
   Eye,
+  Gauge,
   Info,
   LayoutGrid,
   Menu,
@@ -22,6 +26,7 @@ import {
   Sparkles,
   Settings,
   Search,
+  Accessibility,
   Volume2,
   Waves,
 } from 'lucide-react'
@@ -93,12 +98,16 @@ const severityCopy = {
 }
 
 function App() {
-  const [screen, setScreen] = useState<'home' | 'monitor' | 'history'>('monitor')
+  const [screen, setScreen] = useState<'home' | 'monitor' | 'history' | 'settings'>('monitor')
   const [menuOpen, setMenuOpen] = useState(false)
   const [selected, setSelected] = useState(0)
   const [playing, setPlaying] = useState(true)
   const [spoken, setSpoken] = useState(false)
   const [largeText, setLargeText] = useState(false)
+  const [highContrast, setHighContrast] = useState(false)
+  const [captions, setCaptions] = useState(true)
+  const [autoRead, setAutoRead] = useState(false)
+  const [reducedMotion, setReducedMotion] = useState(false)
   const [showDetails, setShowDetails] = useState(true)
   const alert = alerts[selected]
   const Icon = alert.icon
@@ -128,10 +137,16 @@ function App() {
     setSpoken(false)
     setLargeText(false)
     setShowDetails(true)
+    setHighContrast(false)
+    setCaptions(true)
+    setAutoRead(false)
+    setReducedMotion(false)
   }
 
+  const appClass = [largeText ? 'large-type' : '', highContrast ? 'high-contrast' : '', reducedMotion ? 'reduced-motion' : ''].filter(Boolean).join(' ')
+
   return (
-    <main className={largeText ? 'app large-type' : 'app'}>
+    <main className={`app ${appClass}`}>
       <header className="topbar">
         <button className="menu-button" onClick={() => setMenuOpen(!menuOpen)} aria-label="Open navigation"><Menu size={21} /></button>
         <div className="brand-lockup">
@@ -143,7 +158,7 @@ function App() {
         </div>
         <div className="top-status"><span className="live-dot" /> Broadcast monitor active <span className="divider" /> Indianapolis, IN</div>
         <button className="top-action" onClick={() => setScreen('history')}><Bell size={16} /> 3 alerts</button>
-        <button className="top-action" onClick={() => setScreen('history')}><Settings size={16} /> Preferences</button>
+        <button className="top-action" onClick={() => setScreen('settings')}><Settings size={16} /> Preferences</button>
         <button className="icon-button" onClick={reset} aria-label="Reset demo"><RotateCcw size={18} /></button>
       </header>
 
@@ -151,6 +166,7 @@ function App() {
         <button className={screen === 'home' ? 'nav-item active' : 'nav-item'} onClick={() => { setScreen('home'); setMenuOpen(false) }}><LayoutGrid size={17} /> Home</button>
         <button className={screen === 'monitor' ? 'nav-item active' : 'nav-item'} onClick={() => { setScreen('monitor'); setMenuOpen(false) }}><Radio size={17} /> Live monitor <span className="nav-live" /></button>
         <button className={screen === 'history' ? 'nav-item active' : 'nav-item'} onClick={() => { setScreen('history'); setMenuOpen(false) }}><Bell size={17} /> Alert history</button>
+        <button className={screen === 'settings' ? 'nav-item active' : 'nav-item'} onClick={() => { setScreen('settings'); setMenuOpen(false) }}><Settings size={17} /> Accessibility</button>
         <div className="nav-spacer" />
         <span className="nav-hint">Use the remote to explore</span>
       </nav>
@@ -160,8 +176,23 @@ function App() {
           <div className="home-hero-copy"><span className="eyebrow">YOUR SAFETY LAYER</span><h1>Never miss the message behind the message.</h1><p>SignalBridge turns fast, visual broadcast alerts into calm, actionable guidance designed for the living room.</p><button className="primary-action home-cta" onClick={() => setScreen('monitor')}>Open live monitor <ArrowUpRight size={17} /></button></div>
           <div className="home-hero-art"><div className="hero-ring ring-one" /><div className="hero-ring ring-two" /><div className="hero-signal"><Waves size={40} /><span>ALERT<br />READY</span></div><div className="hero-chip chip-top"><ShieldCheck size={14} /> Source verified</div><div className="hero-chip chip-bottom"><Volume2 size={14} /> Spoken guidance</div></div>
         </div>
+        <div className="home-metrics"><div><Gauge size={18} /><strong>98.4%</strong><span>signal readability</span></div><div><Accessibility size={18} /><strong>3 modes</strong><span>visual, caption, voice</span></div><div><CheckCircle2 size={18} /><strong>Verified</strong><span>source-aware guidance</span></div></div>
         <div className="home-section-heading"><div><span className="eyebrow">SIGNALBRIDGE LIBRARY</span><h2>Designed around real moments</h2></div><button className="subtle-button" onClick={() => setScreen('history')}>View all <ChevronRight size={14} /></button></div>
         <div className="home-rail">{alerts.map((item, index) => { const ItemIcon = item.icon; return <button className="feature-card" key={item.id} onClick={() => { setSelected(index); setScreen('monitor') }}><span className="feature-icon" style={{ color: item.accent }}><ItemIcon size={24} /></span><span className="feature-kicker">{severityCopy[item.severity]}</span><strong>{item.title}</strong><small>{item.location}</small><span className="feature-arrow"><ArrowUpRight size={16} /></span></button> })}</div>
+      </section>
+
+      <section className="settings-screen" style={{ display: screen === 'settings' ? 'block' : 'none' }}>
+        <div className="settings-hero"><div><span className="eyebrow">ACCESSIBILITY CONTROL CENTER</span><h1>Make every alert easier to understand.</h1><p>Choose how SignalBridge presents information on your TV. Changes apply immediately to the demo.</p></div><div className="settings-hero-icon"><Accessibility size={42} /></div></div>
+        <div className="settings-layout">
+          <div className="settings-card"><div className="settings-card-heading"><div><span className="eyebrow">PRESENTATION</span><h2>Display and audio</h2></div><span className="settings-state">LIVE PREVIEW</span></div>
+            <SettingRow icon={<Eye size={18} />} title="Large text" description="Increase labels and guidance text across the experience." enabled={largeText} onToggle={() => setLargeText(!largeText)} />
+            <SettingRow icon={<Contrast size={18} />} title="High contrast" description="Strengthen borders and color separation for low-vision viewing." enabled={highContrast} onToggle={() => setHighContrast(!highContrast)} />
+            <SettingRow icon={<Captions size={18} />} title="Broadcast captions" description="Keep detected on-screen speech visible below the video feed." enabled={captions} onToggle={() => setCaptions(!captions)} />
+            <SettingRow icon={<Volume2 size={18} />} title="Read urgent alerts aloud" description="Automatically speak critical guidance when a new alert is detected." enabled={autoRead} onToggle={() => setAutoRead(!autoRead)} />
+            <SettingRow icon={<Radio size={18} />} title="Reduce motion" description="Remove animated radar and transition effects." enabled={reducedMotion} onToggle={() => setReducedMotion(!reducedMotion)} />
+          </div>
+          <div className="settings-card preview-card"><div className="settings-card-heading"><div><span className="eyebrow">DESIGN PRINCIPLE</span><h2>Explain the signal</h2></div><ShieldCheck size={22} color="#6ee7e0" /></div><div className="principle-list"><div><span>01</span><b>Make urgency obvious</b><p>Severity, timing, and the recommended next step appear together.</p></div><div><span>02</span><b>Show the evidence</b><p>Detection stages and confidence stay visible instead of becoming a black box.</p></div><div><span>03</span><b>Respect the viewer</b><p>Voice, captions, high contrast, and large type are first-class controls.</p></div></div><button className="primary-action" onClick={() => setScreen('monitor')}>Preview live monitor <ArrowUpRight size={17} /></button></div>
+        </div>
       </section>
 
       <section className="history-screen" style={{ display: screen === 'history' ? 'block' : 'none' }}>
@@ -182,7 +213,7 @@ function App() {
             <div className="radar-orb"><div className="radar-sweep" /><span>LIVE RADAR</span></div>
             <div className="broadcast-copy"><span>SEVERE WEATHER UPDATE</span><strong>Stay alert. Conditions changing.</strong></div>
             <div className="detected-box"><span>OpenCV detection region</span><i /></div>
-            <div className="caption-strip">...a warning has been issued for Marion County and surrounding areas...</div>
+            {captions && <div className="caption-strip">...a warning has been issued for Marion County and surrounding areas...</div>}
           </div>
           <div className="video-controls">
             <button className="play-button" onClick={() => setPlaying(!playing)} aria-label={playing ? 'Pause feed' : 'Play feed'}>{playing ? <Pause size={17} /> : <Play size={17} />}</button>
@@ -224,6 +255,10 @@ function App() {
       <footer className="footer"><span><AudioLines size={15} /> Designed for low vision, older adults, and viewers who need information explained clearly.</span><span className="footer-right">SignalBridge prototype <span className="divider" /> v0.1.0</span></footer>
     </main>
   )
+}
+
+function SettingRow({ icon, title, description, enabled, onToggle }: { icon: ReactNode; title: string; description: string; enabled: boolean; onToggle: () => void }) {
+  return <div className="setting-row"><span className="setting-icon">{icon}</span><span className="setting-copy"><b>{title}</b><small>{description}</small></span><button className={enabled ? 'toggle on' : 'toggle'} onClick={onToggle} aria-pressed={enabled} aria-label={`${title}: ${enabled ? 'on' : 'off'}`}><span /></button></div>
 }
 
 export default App
