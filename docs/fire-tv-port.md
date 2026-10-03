@@ -55,3 +55,5 @@ npm run package:firetv
 ```
 
 This creates `artifacts/signalbridge-firetv.zip` from the production `dist/` folder. Amazon's Web App Tester can load packaged HTML5 apps from a ZIP on a Fire TV device. The package is a real distributable web-app artifact, but it is not being described as a native Android APK or a Vega `.vpkg` until those toolchains are installed and the app is ported to them.
+
+Run `npm run check:firetv` to inspect the local machine for Node.js, Java, ADB, Gradle, Android SDK, and Vega SDK availability. This check is informational and does not install software or contact AWS.

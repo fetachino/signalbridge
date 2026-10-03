@@ -10,7 +10,8 @@
     "build": "tsc -b && vite build",
     "preview": "vite preview",
     "test": "vitest run",
-    "package:firetv": "npm run build && node scripts/package-firetv.mjs"
+    "package:firetv": "npm run build && node scripts/package-firetv.mjs",
+    "check:firetv": "node scripts/check-firetv-env.mjs"
   },
   "keywords": [
     "fire-tv",
