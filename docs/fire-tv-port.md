@@ -45,3 +45,13 @@ The current `src/lib/detectionPipeline.ts` is deliberately deterministic. It is 
 7. Record a short judging demo and retain this browser shell as the deterministic fallback.
 
 The browser build remains an important fallback because it gives judges a reproducible interaction surface even when a device simulator is unavailable.
+
+## Local Fire TV package
+
+The repository includes a no-cloud packaging path for the current HTML5 shell:
+
+```bash
+npm run package:firetv
+```
+
+This creates `artifacts/signalbridge-firetv.zip` from the production `dist/` folder. Amazon's Web App Tester can load packaged HTML5 apps from a ZIP on a Fire TV device. The package is a real distributable web-app artifact, but it is not being described as a native Android APK or a Vega `.vpkg` until those toolchains are installed and the app is ported to them.

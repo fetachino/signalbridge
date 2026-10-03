@@ -8,6 +8,8 @@
 - [x] Accessibility controls are visible and interactive
 - [x] Scan state is visible and testable
 - [x] Browser shell has a deterministic fallback for judging
+- [x] Production HTML5 ZIP can be generated for Fire TV Web App Tester
+- [ ] ZIP tested on a Fire TV device with Web App Tester
 - [ ] Fire TV or Vega simulator/device run captured
 - [ ] Real broadcast fixture and OCR/classifier connected
 

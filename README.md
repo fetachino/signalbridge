@@ -67,9 +67,10 @@ Open the local URL shown by Vite. The app is designed for a 16:9 TV viewport and
 ```bash
 npm run build
 npm test
+npm run package:firetv
 ```
 
-The build and detection-pipeline tests run in GitHub Actions on every push and pull request. The local prototype has been verified through the home screen, live monitor, alert history, accessibility controls, preference persistence, alert switching, scan interaction, and read-aloud interaction.
+The build and detection-pipeline tests run in GitHub Actions on every push and pull request. `npm run package:firetv` creates a ZIP for Fire TV Web App Tester evaluation. The local prototype has been verified through the home screen, live monitor, alert history, accessibility controls, preference persistence, alert switching, scan interaction, and read-aloud interaction.
 
 ## Submission direction
 
