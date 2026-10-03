@@ -46,6 +46,12 @@ The current `src/lib/detectionPipeline.ts` is deliberately deterministic, while 
 
 The browser build remains an important fallback because it gives judges a reproducible interaction surface even when a device simulator is unavailable.
 
+## Android TV emulator validation
+
+When a physical Fire TV is unavailable, the current HTML5 shell can still be exercised on an Android TV emulator. On October 3, 2026, the production preview was loaded at 1920x1080 in an Android TV API 36 x86_64 AVD through a temporary WebView harness. The emulator verified the TV layout, scan-button interaction, and remote-style D-pad input.
+
+This is useful layout and interaction evidence, but it is not equivalent to Amazon Web App Tester on Fire TV. The emulator WebView used SignalBridge's deterministic Canvas and fixture-text fallbacks for the scan runtime; the host browser separately verified the OpenCV.js and Tesseract.js paths.
+
 ## Local Fire TV package
 
 The repository includes a no-cloud packaging path for the current HTML5 shell:

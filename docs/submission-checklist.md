@@ -12,6 +12,7 @@
 - [x] OCR extracts demo alert text with confidence reporting
 - [x] OCR text is normalized into severity, category, and action metadata
 - [x] Production HTML5 ZIP can be generated for Fire TV Web App Tester
+- [x] Android TV API 36 emulator WebView run captured for 1920x1080 layout, scan interaction, and D-pad input
 - [ ] ZIP tested on a Fire TV device with Web App Tester
 - [ ] Fire TV or Vega simulator/device run captured
 - [ ] Real broadcast fixture and production classifier connected
