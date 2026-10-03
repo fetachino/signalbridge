@@ -124,6 +124,9 @@ button { font: inherit; color: inherit; }
 .timeline-fill { width: 58%; height: 100%; display: block; border-radius: 4px; background: #6ee7e0; }
 .timeline-thumb { position: absolute; left: 57%; top: 50%; width: 10px; height: 10px; transform: translate(-50%, -50%); border-radius: 50%; background: #dffeff; }
 .control-label { color: #6ee7e0; }
+.scan-button { display: flex; align-items: center; gap: 6px; padding: 7px 9px; border: 1px solid rgba(110,231,224,.24); border-radius: 7px; color: #9fe9e7; background: rgba(110,231,224,.07); font: 500 10px 'DM Mono', monospace; cursor: pointer; }
+.scan-button:hover { border-color: #6ee7e0; background: rgba(110,231,224,.13); }
+.scan-button:disabled { cursor: wait; opacity: .65; }
 .subtle-button { margin-left: auto; padding: 7px 10px; color: #91abc1; border-radius: 7px; font-size: 10px; }
 .alert-card { position: relative; padding: 22px 24px 18px; border-color: color-mix(in srgb, var(--accent) 30%, transparent); background: linear-gradient(145deg, rgba(16,35,57,.98), rgba(9,23,41,.95)); }
 .alert-card:before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--accent); }
@@ -154,6 +157,8 @@ h2 { margin: 5px 0 0; font-size: 17px; letter-spacing: -.03em; }
 .processing, .count-badge { display: flex; align-items: center; gap: 6px; color: #6ee7e0; font: 500 10px 'DM Mono', monospace; }
 .count-badge { padding: 5px 8px; border-radius: 5px; background: rgba(110,231,224,.1); }
 .trace-flow { display: flex; align-items: center; margin: 23px 2px 17px; }
+.trace-step { display: flex; align-items: center; flex: 1; }
+.trace-step:last-child { flex: 0; }
 .trace-node { padding: 7px 10px; border: 1px solid #29445d; border-radius: 6px; color: #7691aa; font: 500 10px 'DM Mono', monospace; }
 .trace-node.done { color: #6ee7e0; border-color: rgba(110,231,224,.4); background: rgba(110,231,224,.06); }
 .trace-node.current { color: #fff; border-color: #8b73ff; background: rgba(139,115,255,.16); }

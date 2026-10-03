@@ -30,6 +30,7 @@ import {
   Volume2,
   Waves,
 } from 'lucide-react'
+import { buildDetectionTrace } from './lib/detectionPipeline'
 
 type Alert = {
   id: string
@@ -108,18 +109,12 @@ function App() {
   const [captions, setCaptions] = useState(true)
   const [autoRead, setAutoRead] = useState(false)
   const [reducedMotion, setReducedMotion] = useState(false)
+  const [scanState, setScanState] = useState<'ready' | 'scanning'>('ready')
   const [showDetails, setShowDetails] = useState(true)
   const alert = alerts[selected]
   const Icon = alert.icon
 
-  const detectionRows = useMemo(
-    () => [
-      ['Text region', 'Detected', '98%'],
-      ['Alert symbol', alert.severity === 'critical' ? 'Matched' : 'Classified', `${alert.confidence}%`],
-      ['Location match', 'Marion County', '91%'],
-    ],
-    [alert],
-  )
+  const detection = useMemo(() => buildDetectionTrace(alert), [alert])
 
   function speakAlert() {
     setSpoken(true)
@@ -141,6 +136,13 @@ function App() {
     setCaptions(true)
     setAutoRead(false)
     setReducedMotion(false)
+    setScanState('ready')
+  }
+
+  function scanFrame() {
+    if (scanState === 'scanning') return
+    setScanState('scanning')
+    window.setTimeout(() => setScanState('ready'), 700)
   }
 
   const appClass = [largeText ? 'large-type' : '', highContrast ? 'high-contrast' : '', reducedMotion ? 'reduced-motion' : ''].filter(Boolean).join(' ')
@@ -212,13 +214,14 @@ function App() {
             <div className="weather-bug"><span>WISH 8</span><b>WEATHER</b></div>
             <div className="radar-orb"><div className="radar-sweep" /><span>LIVE RADAR</span></div>
             <div className="broadcast-copy"><span>SEVERE WEATHER UPDATE</span><strong>Stay alert. Conditions changing.</strong></div>
-            <div className="detected-box"><span>OpenCV detection region</span><i /></div>
+            {showDetails && <div className="detected-box"><span>OpenCV detection region</span><i /></div>}
             {captions && <div className="caption-strip">...a warning has been issued for Marion County and surrounding areas...</div>}
           </div>
           <div className="video-controls">
             <button className="play-button" onClick={() => setPlaying(!playing)} aria-label={playing ? 'Pause feed' : 'Play feed'}>{playing ? <Pause size={17} /> : <Play size={17} />}</button>
             <div className="timeline"><span className="timeline-fill" /><span className="timeline-thumb" /></div>
             <span className="control-label">Alert scan {playing ? 'running' : 'paused'}</span>
+            <button className="scan-button" onClick={scanFrame} disabled={scanState === 'scanning'}><Search size={13} /> {scanState === 'scanning' ? 'Scanning frame' : 'Scan frame'}</button>
             <button className="subtle-button" onClick={() => setShowDetails(!showDetails)}>{showDetails ? 'Hide' : 'Show'} overlay</button>
           </div>
         </div>
@@ -241,10 +244,10 @@ function App() {
 
       <section className={screen === 'monitor' ? 'lower-grid' : 'lower-grid hidden-screen'}>
         <div className="panel detection-panel">
-          <div className="panel-heading"><div><span className="eyebrow">TRANSPARENT AI</span><h2>Detection trace</h2></div><span className="processing"><Sparkles size={14} /> Processing in real time</span></div>
-          <div className="trace-flow"><span className="trace-node done">Frame</span><span className="trace-line active" /><span className="trace-node done">Text</span><span className="trace-line active" /><span className="trace-node done">Classify</span><span className="trace-line" /><span className="trace-node current">Guide</span></div>
-          <div className="trace-table">{detectionRows.map(([name, result, value]) => <div className="trace-row" key={name}><span>{name}</span><b>{result}</b><em>{value}</em></div>)}</div>
-          <p className="panel-note"><CircleHelp size={14} /> SignalBridge shows its evidence so viewers can decide whether to trust the guidance.</p>
+          <div className="panel-heading"><div><span className="eyebrow">TRANSPARENT AI</span><h2>Detection trace</h2></div><span className="processing"><Sparkles size={14} /> {scanState === 'scanning' ? 'Scanning frame' : 'Ready for next frame'}</span></div>
+          <div className="trace-flow">{detection.stages.map((stage, index) => <span className="trace-step" key={stage.label}><span className={`trace-node ${stage.status}`}>{stage.label}</span>{index < detection.stages.length - 1 && <span className={stage.status === 'pending' ? 'trace-line' : 'trace-line active'} />}</span>)}</div>
+          <div className="trace-table">{detection.evidence.map((row) => <div className="trace-row" key={row.name}><span>{row.name}</span><b>{row.result}</b><em>{row.confidence}</em></div>)}</div>
+          <p className="panel-note"><CircleHelp size={14} /> {detection.explanation} SignalBridge shows its evidence so viewers can decide whether to trust the guidance.</p>
         </div>
         <div className="panel history-panel">
           <div className="panel-heading"><div><span className="eyebrow">ALERT HISTORY</span><h2>Recent detections</h2></div><span className="count-badge">{alerts.length} today</span></div>
