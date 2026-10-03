@@ -1,4 +1,4 @@
-import { type CSSProperties, type ReactNode, useMemo, useState } from 'react'
+import { type CSSProperties, type ReactNode, useEffect, useMemo, useState } from 'react'
 import {
   AlertTriangle,
   ArrowUpRight,
@@ -126,6 +126,23 @@ function App() {
       window.speechSynthesis.speak(utterance)
     }
   }
+
+  useEffect(() => {
+    function handleRemoteKey(event: KeyboardEvent) {
+      if (screen !== 'monitor') return
+      if (event.key === 'ArrowLeft') setSelected((current) => (current + alerts.length - 1) % alerts.length)
+      if (event.key === 'ArrowRight') setSelected((current) => (current + 1) % alerts.length)
+      if (event.key === 'Home') setScreen('home')
+      if (event.key === 'End') setScreen('history')
+    }
+
+    window.addEventListener('keydown', handleRemoteKey)
+    return () => window.removeEventListener('keydown', handleRemoteKey)
+  }, [screen])
+
+  useEffect(() => {
+    if (autoRead && screen === 'monitor' && alert.severity === 'critical') speakAlert()
+  }, [autoRead, screen, selected])
 
   function reset() {
     setSelected(0)

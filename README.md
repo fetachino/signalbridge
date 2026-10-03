@@ -22,12 +22,14 @@ This first slice is a polished, browser-verifiable TV experience shell. It inclu
 - TV-style home screen with hero messaging and feature rails
 - Primary navigation for Home, Live Monitor, and Alert History
 - Remote-friendly, focusable actions and large 16:9 layout
+- Arrow-key remote navigation between alert scenarios
 - A live-feed style alert monitor
 - Three realistic emergency and community alert scenarios
 - Transparent detection trace with confidence indicators
 - Read-aloud guidance using the browser speech engine
 - Large-text accessibility mode
 - Persistent accessibility preferences across sessions
+- Optional automatic read-aloud for critical alerts
 - Replaceable detection-pipeline contract with a live scan state
 - Alert history and source verification states
 
