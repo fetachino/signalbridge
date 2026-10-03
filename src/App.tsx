@@ -1,7 +1,9 @@
 import { type CSSProperties, useMemo, useState } from 'react'
 import {
   AlertTriangle,
+  ArrowUpRight,
   AudioLines,
+  Bell,
   Check,
   ChevronLeft,
   ChevronRight,
@@ -9,6 +11,8 @@ import {
   CloudRain,
   Eye,
   Info,
+  LayoutGrid,
+  Menu,
   MapPin,
   Pause,
   Play,
@@ -16,6 +20,8 @@ import {
   RotateCcw,
   ShieldCheck,
   Sparkles,
+  Settings,
+  Search,
   Volume2,
   Waves,
 } from 'lucide-react'
@@ -87,6 +93,8 @@ const severityCopy = {
 }
 
 function App() {
+  const [screen, setScreen] = useState<'home' | 'monitor' | 'history'>('monitor')
+  const [menuOpen, setMenuOpen] = useState(false)
   const [selected, setSelected] = useState(0)
   const [playing, setPlaying] = useState(true)
   const [spoken, setSpoken] = useState(false)
@@ -125,6 +133,7 @@ function App() {
   return (
     <main className={largeText ? 'app large-type' : 'app'}>
       <header className="topbar">
+        <button className="menu-button" onClick={() => setMenuOpen(!menuOpen)} aria-label="Open navigation"><Menu size={21} /></button>
         <div className="brand-lockup">
           <div className="brand-mark"><Waves size={22} strokeWidth={2.5} /></div>
           <div>
@@ -133,10 +142,34 @@ function App() {
           </div>
         </div>
         <div className="top-status"><span className="live-dot" /> Broadcast monitor active <span className="divider" /> Indianapolis, IN</div>
+        <button className="top-action" onClick={() => setScreen('history')}><Bell size={16} /> 3 alerts</button>
+        <button className="top-action" onClick={() => setScreen('history')}><Settings size={16} /> Preferences</button>
         <button className="icon-button" onClick={reset} aria-label="Reset demo"><RotateCcw size={18} /></button>
       </header>
 
-      <section className="hero-grid">
+      <nav className={menuOpen ? 'tv-nav open' : 'tv-nav'} aria-label="Primary navigation">
+        <button className={screen === 'home' ? 'nav-item active' : 'nav-item'} onClick={() => { setScreen('home'); setMenuOpen(false) }}><LayoutGrid size={17} /> Home</button>
+        <button className={screen === 'monitor' ? 'nav-item active' : 'nav-item'} onClick={() => { setScreen('monitor'); setMenuOpen(false) }}><Radio size={17} /> Live monitor <span className="nav-live" /></button>
+        <button className={screen === 'history' ? 'nav-item active' : 'nav-item'} onClick={() => { setScreen('history'); setMenuOpen(false) }}><Bell size={17} /> Alert history</button>
+        <div className="nav-spacer" />
+        <span className="nav-hint">Use the remote to explore</span>
+      </nav>
+
+      <section className="home-screen" style={{ display: screen === 'home' ? 'block' : 'none' }}>
+        <div className="home-hero">
+          <div className="home-hero-copy"><span className="eyebrow">YOUR SAFETY LAYER</span><h1>Never miss the message behind the message.</h1><p>SignalBridge turns fast, visual broadcast alerts into calm, actionable guidance designed for the living room.</p><button className="primary-action home-cta" onClick={() => setScreen('monitor')}>Open live monitor <ArrowUpRight size={17} /></button></div>
+          <div className="home-hero-art"><div className="hero-ring ring-one" /><div className="hero-ring ring-two" /><div className="hero-signal"><Waves size={40} /><span>ALERT<br />READY</span></div><div className="hero-chip chip-top"><ShieldCheck size={14} /> Source verified</div><div className="hero-chip chip-bottom"><Volume2 size={14} /> Spoken guidance</div></div>
+        </div>
+        <div className="home-section-heading"><div><span className="eyebrow">SIGNALBRIDGE LIBRARY</span><h2>Designed around real moments</h2></div><button className="subtle-button" onClick={() => setScreen('history')}>View all <ChevronRight size={14} /></button></div>
+        <div className="home-rail">{alerts.map((item, index) => { const ItemIcon = item.icon; return <button className="feature-card" key={item.id} onClick={() => { setSelected(index); setScreen('monitor') }}><span className="feature-icon" style={{ color: item.accent }}><ItemIcon size={24} /></span><span className="feature-kicker">{severityCopy[item.severity]}</span><strong>{item.title}</strong><small>{item.location}</small><span className="feature-arrow"><ArrowUpRight size={16} /></span></button> })}</div>
+      </section>
+
+      <section className="history-screen" style={{ display: screen === 'history' ? 'block' : 'none' }}>
+        <div className="history-hero"><div><span className="eyebrow">ALERT HISTORY</span><h1>Your household signal log</h1><p>Review what SignalBridge saw, what it recommended, and why it trusted the source.</p></div><div className="history-stat"><strong>03</strong><span>alerts today</span></div></div>
+        <div className="history-full-grid">{alerts.map((item, index) => { const ItemIcon = item.icon; return <button className="history-full-card" key={item.id} onClick={() => { setSelected(index); setScreen('monitor') }}><span className="history-full-icon" style={{ color: item.accent }}><ItemIcon size={22} /></span><span className="history-full-copy"><span className="feature-kicker">{severityCopy[item.severity]} · {item.issued}</span><strong>{item.label}</strong><small>{item.location}</small><p>{item.action}</p></span><ChevronRight size={19} /></button> })}</div>
+      </section>
+
+      <section className={screen === 'monitor' ? 'hero-grid' : 'hero-grid hidden-screen'}>
         <div className="video-card">
           <div className="video-toolbar">
             <span className="live-pill"><Radio size={14} /> LIVE FEED</span>
@@ -175,7 +208,7 @@ function App() {
         </div>
       </section>
 
-      <section className="lower-grid">
+      <section className={screen === 'monitor' ? 'lower-grid' : 'lower-grid hidden-screen'}>
         <div className="panel detection-panel">
           <div className="panel-heading"><div><span className="eyebrow">TRANSPARENT AI</span><h2>Detection trace</h2></div><span className="processing"><Sparkles size={14} /> Processing in real time</span></div>
           <div className="trace-flow"><span className="trace-node done">Frame</span><span className="trace-line active" /><span className="trace-node done">Text</span><span className="trace-line active" /><span className="trace-node done">Classify</span><span className="trace-line" /><span className="trace-node current">Guide</span></div>
