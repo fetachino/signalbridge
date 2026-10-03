@@ -8,10 +8,12 @@
 - [x] Accessibility controls are visible and interactive
 - [x] Scan state is visible and testable
 - [x] Browser shell has a deterministic fallback for judging
+- [x] OpenCV edge analysis runs on a demo frame
+- [x] OCR extracts demo alert text with confidence reporting
 - [x] Production HTML5 ZIP can be generated for Fire TV Web App Tester
 - [ ] ZIP tested on a Fire TV device with Web App Tester
 - [ ] Fire TV or Vega simulator/device run captured
-- [ ] Real broadcast fixture and OCR/classifier connected
+- [ ] Real broadcast fixture and production classifier connected
 
 ## Demo recording
 
@@ -26,7 +28,7 @@
 ## Submission copy reminders
 
 - Describe the current browser build as a prototype shell, not a completed device binary.
-- Explain that the detection contract is ready for OpenCV, OCR, and classifier integration.
+- Explain that the detection contract now has OpenCV/OCR demo adapters and still needs a live classifier integration.
 - Include the public GitHub repository and a short demo video.
 - Mention accessibility as the product's central user outcome, not only as a technical feature.
 - Keep any claims about live detection, device testing, or cloud services tied to evidence from the actual demo.

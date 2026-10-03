@@ -7,12 +7,14 @@
 - Alert switching with severity and confidence states
 - Read-aloud guidance and large-text mode
 - Public GitHub repository with automated build verification
+- Lazy OpenCV.js edge analysis and Tesseract.js OCR on demo frames
+- No-cloud Fire TV HTML5 ZIP packaging workflow
 
 ## Next
 
 - Add keyboard and remote focus traversal tests
 - Add real video fixtures and frame capture
-- Add OCR preprocessing and structured alert extraction
+- Add structured alert extraction from OCR output
 - Move shared screens into the Fire TV/Vega project structure
 - Package and test on the Fire TV or Vega simulator
 
