@@ -127,6 +127,10 @@ button { font: inherit; color: inherit; }
 .scan-button { display: flex; align-items: center; gap: 6px; padding: 7px 9px; border: 1px solid rgba(110,231,224,.24); border-radius: 7px; color: #9fe9e7; background: rgba(110,231,224,.07); font: 500 10px 'DM Mono', monospace; cursor: pointer; }
 .scan-button:hover { border-color: #6ee7e0; background: rgba(110,231,224,.13); }
 .scan-button:disabled { cursor: wait; opacity: .65; }
+.frame-analysis { display: flex; align-items: center; gap: 15px; padding: 10px 18px; border-top: 1px solid rgba(110,231,224,.12); color: #7fa2b8; background: rgba(110,231,224,.035); font: 500 9px 'DM Mono', monospace; }
+.frame-analysis-label { display: flex; align-items: center; gap: 6px; color: #6ee7e0; letter-spacing: .08em; }
+.frame-analysis b { color: #dffeff; font-weight: 500; }
+.frame-time { margin-left: auto; color: #8b73ff; }
 .subtle-button { margin-left: auto; padding: 7px 10px; color: #91abc1; border-radius: 7px; font-size: 10px; }
 .alert-card { position: relative; padding: 22px 24px 18px; border-color: color-mix(in srgb, var(--accent) 30%, transparent); background: linear-gradient(145deg, rgba(16,35,57,.98), rgba(9,23,41,.95)); }
 .alert-card:before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--accent); }

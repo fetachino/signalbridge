@@ -32,7 +32,7 @@ Evidence image   extracted text      severity + location
          visual overlay + captions + speech
 ```
 
-The current `src/lib/detectionPipeline.ts` is deliberately deterministic. It is the seam for adding OpenCV preprocessing, OCR, and classification without coupling those dependencies to TV navigation.
+The current `src/lib/detectionPipeline.ts` is deliberately deterministic, while `src/lib/frameAnalysis.ts` provides lightweight canvas pixel metrics for the browser package. These are seams for adding OpenCV preprocessing, OCR, and classification without coupling those dependencies to TV navigation.
 
 ## Device handoff checklist
 

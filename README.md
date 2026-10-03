@@ -31,9 +31,10 @@ This first slice is a polished, browser-verifiable TV experience shell. It inclu
 - Persistent accessibility preferences across sessions
 - Optional automatic read-aloud for critical alerts
 - Replaceable detection-pipeline contract with a live scan state
+- Local frame-preprocessing telemetry for edge density, contrast, and processing time
 - Alert history and source verification states
 
-The prototype is intentionally honest about its current state. The detection trace uses curated demo scenarios while the Fire TV runtime, real frame processing, OCR, and alert classification are being implemented.
+The prototype is intentionally honest about its current state. The detection trace uses curated demo scenarios and lightweight canvas frame preprocessing. The Fire TV runtime, OpenCV preprocessing, OCR, and alert classification are still being implemented behind the documented pipeline boundary.
 
 The next implementation milestone is replacing the curated detection trace with real frame processing, OCR, and alert classification in the Fire TV runtime. The Amazon reference apps show the production direction we are targeting: shared TV components, platform-specific Fire TV/Vega builds, proper focus management, real media playback, and catalog-backed content.
 
