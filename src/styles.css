@@ -135,6 +135,7 @@ button { font: inherit; color: inherit; }
 .ocr-result-label { color: #a98bff; letter-spacing: .08em; }
 .ocr-result-text { color: #d7e9f5; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .ocr-confidence { margin-left: auto; color: #6ee7e0; }
+.ocr-classification { color: #ffad9f; letter-spacing: .04em; }
 .subtle-button { margin-left: auto; padding: 7px 10px; color: #91abc1; border-radius: 7px; font-size: 10px; }
 .alert-card { position: relative; padding: 22px 24px 18px; border-color: color-mix(in srgb, var(--accent) 30%, transparent); background: linear-gradient(145deg, rgba(16,35,57,.98), rgba(9,23,41,.95)); }
 .alert-card:before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--accent); }

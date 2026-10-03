@@ -10,6 +10,7 @@
 - [x] Browser shell has a deterministic fallback for judging
 - [x] OpenCV edge analysis runs on a demo frame
 - [x] OCR extracts demo alert text with confidence reporting
+- [x] OCR text is normalized into severity, category, and action metadata
 - [x] Production HTML5 ZIP can be generated for Fire TV Web App Tester
 - [ ] ZIP tested on a Fire TV device with Web App Tester
 - [ ] Fire TV or Vega simulator/device run captured

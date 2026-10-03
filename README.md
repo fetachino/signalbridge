@@ -34,6 +34,7 @@ This first slice is a polished, browser-verifiable TV experience shell. It inclu
 - Local frame-preprocessing telemetry for edge density, contrast, and processing time
 - Lazy OpenCV.js Canny edge detection with a canvas fallback for unsupported WebViews
 - Lazy Tesseract.js OCR with confidence reporting and an offline fixture fallback
+- Structured OCR-to-alert extraction for severity, category, and action cues
 - Alert history and source verification states
 
 The prototype is intentionally honest about its current state. The frame scan now runs real lazy-loaded OpenCV.js Canny edge detection and Tesseract.js OCR against the demo frame when language data is available, with a deterministic fallback for offline WebViews. Alert scenarios and classification outputs remain curated fixtures until a live broadcast source and production classifier are connected.
