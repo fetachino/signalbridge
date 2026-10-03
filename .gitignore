@@ -4,3 +4,6 @@ dist/
 *.local
 .tmp/
 artifacts/*.zip
+artifacts/signalbridge-demo.mp4
+artifacts/tv-screen.png
+artifacts/tv-scan-result-good.png
