@@ -25,7 +25,11 @@ button { font: inherit; color: inherit; }
 .nav-item.active svg { color: #6ee7e0; }
 .nav-live { width: 6px; height: 6px; border-radius: 50%; background: #ff756a; box-shadow: 0 0 0 4px rgba(255,117,106,.1); }
 .nav-spacer { flex: 1; }
-.nav-hint { color: #55738b; font: 500 9px 'DM Mono', monospace; letter-spacing: .08em; }
+.nav-hint { display: flex; align-items: center; gap: 7px; color: #55738b; font: 500 9px 'DM Mono', monospace; letter-spacing: .08em; }
+.remote-ready-dot { width: 6px; height: 6px; border-radius: 50%; background: #6ee7e0; box-shadow: 0 0 0 4px rgba(110,231,224,.1); }
+.remote-focus-label { color: #6ee7e0; }
+.remote-focus, button:focus-visible { outline: 2px solid #6ee7e0; outline-offset: 3px; box-shadow: 0 0 0 5px rgba(110,231,224,.13), 0 0 22px rgba(110,231,224,.18); }
+.remote-focus { position: relative; z-index: 2; }
 .hidden-screen { display: none !important; }
 .home-screen, .history-screen { max-width: 1440px; margin: 28px auto 0; }
 .home-hero { min-height: 390px; display: grid; grid-template-columns: 1fr .8fr; overflow: hidden; border: 1px solid rgba(124,171,211,.16); border-radius: 17px; background: linear-gradient(115deg, rgba(15,39,64,.95), rgba(7,20,36,.92)); }
