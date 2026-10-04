@@ -248,18 +248,15 @@ function App() {
         }
         if (remoteTarget === 'home-tornado') {
           setSelected(0)
-          setScreen('monitor')
-          focusRemoteTarget('nav-monitor')
+          focusRemoteTarget('home-tornado')
         }
         if (remoteTarget === 'home-flood') {
           setSelected(1)
-          setScreen('monitor')
-          focusRemoteTarget('nav-monitor')
+          focusRemoteTarget('home-flood')
         }
         if (remoteTarget === 'home-shelter') {
           setSelected(2)
-          setScreen('monitor')
-          focusRemoteTarget('nav-monitor')
+          focusRemoteTarget('home-shelter')
         }
         if (remoteTarget === 'scan') scanFrame()
         if (remoteTarget === 'read-aloud') speakAlert()
@@ -329,6 +326,7 @@ function App() {
   }
 
   const appClass = [largeText ? 'large-type' : '', highContrast ? 'high-contrast' : '', reducedMotion ? 'reduced-motion' : ''].filter(Boolean).join(' ')
+  const artwork = ['/signalbridge-tornado-card.png', '/signalbridge-flood-card.png', '/signalbridge-community-card.png'][selected]
 
   return (
     <main className={`app ${appClass}`}>
@@ -348,6 +346,7 @@ function App() {
       </header>
 
       <nav className={menuOpen ? 'tv-nav open' : 'tv-nav'} aria-label="Primary navigation">
+        <div className="nav-profile"><div className="nav-profile-mark"><Waves size={24} /></div><div><strong>SignalBridge</strong><small>Marion County</small></div></div>
         <button ref={(element) => { remoteRefs.current['nav-home'] = element }} className={`${screen === 'home' ? 'nav-item active' : 'nav-item'}${remoteTarget === 'nav-home' ? ' remote-focus' : ''}`} onClick={() => { setScreen('home'); setMenuOpen(false); focusRemoteTarget('nav-home') }}><LayoutGrid size={17} /> Home</button>
         <button ref={(element) => { remoteRefs.current['nav-monitor'] = element }} className={`${screen === 'monitor' ? 'nav-item active' : 'nav-item'}${remoteTarget === 'nav-monitor' ? ' remote-focus' : ''}`} onClick={() => { setScreen('monitor'); setMenuOpen(false); focusRemoteTarget('nav-monitor') }}><Radio size={17} /> Live monitor <span className="nav-live" /></button>
         <button ref={(element) => { remoteRefs.current['nav-history'] = element }} className={`${screen === 'history' ? 'nav-item active' : 'nav-item'}${remoteTarget === 'nav-history' ? ' remote-focus' : ''}`} onClick={() => { setScreen('history'); setMenuOpen(false); focusRemoteTarget('nav-history') }}><Bell size={17} /> Alert history</button>
@@ -357,13 +356,12 @@ function App() {
       </nav>
 
       <section className="home-screen" style={{ display: screen === 'home' ? 'block' : 'none' }}>
-        <div className="home-hero">
-          <div className="home-hero-copy"><span className="eyebrow">LIVE SAFETY CHANNEL</span><h1>Weather that speaks clearly.</h1><p>SignalBridge catches critical moments in a live broadcast and turns them into calm, accessible guidance for everyone in the room.</p><div className="home-hero-actions"><button ref={(element) => { remoteRefs.current['home-watch'] = element }} className={`primary-action home-cta${remoteTarget === 'home-watch' ? ' remote-focus' : ''}`} onClick={() => { setScreen('monitor'); focusRemoteTarget('nav-monitor') }}><Play size={17} fill="currentColor" /> Watch live safety feed</button><span className="hero-meta"><span className="live-dot" /> Monitoring now</span></div></div>
-          <div className="home-hero-art"><div className="hero-ring ring-one" /><div className="hero-ring ring-two" /><div className="hero-signal"><Waves size={40} /><span>ALERT<br />READY</span></div><div className="hero-chip chip-top"><ShieldCheck size={14} /> Source verified</div><div className="hero-chip chip-bottom"><Volume2 size={14} /> Spoken guidance</div></div>
+        <div className="home-hero" style={{ backgroundImage: `url(${artwork})` }}>
+          <div className="home-hero-copy"><span className="eyebrow">{severityCopy[alert.severity]} · LIVE BROADCAST</span><h1>{alert.label === 'TORNADO WARNING' ? 'Tornado warning detected.' : alert.title + '.'}</h1><p>{alert.summary} SignalBridge turns the broadcast into clear, accessible guidance for everyone in the room.</p><div className="home-hero-actions"><button ref={(element) => { remoteRefs.current['home-watch'] = element }} className={`primary-action home-cta${remoteTarget === 'home-watch' ? ' remote-focus' : ''}`} onClick={() => { setScreen('monitor'); focusRemoteTarget('nav-monitor') }}><Play size={17} fill="currentColor" /> Watch live safety feed</button><span className="hero-meta"><span className="live-dot" /> Monitoring now</span></div></div>
+          <div className="home-hero-meta"><span><ShieldCheck size={15} /> Source verified</span><span><Volume2 size={15} /> Spoken guidance ready</span><span><MapPin size={15} /> {alert.location}</span></div>
         </div>
-        <div className="home-metrics"><div><Gauge size={18} /><strong>98.4%</strong><span>signal readability</span></div><div><Accessibility size={18} /><strong>3 modes</strong><span>visual, caption, voice</span></div><div><CheckCircle2 size={18} /><strong>Verified</strong><span>source-aware guidance</span></div></div>
-        <div className="home-section-heading"><div><span className="eyebrow">SIGNALBRIDGE LIBRARY</span><h2>Designed around real moments</h2></div><button className="subtle-button" onClick={() => setScreen('history')}>View all <ChevronRight size={14} /></button></div>
-        <div className="home-rail">{alerts.map((item, index) => { const ItemIcon = item.icon; const target = ['home-tornado', 'home-flood', 'home-shelter'][index] as RemoteTarget; return <button ref={(element) => { remoteRefs.current[target] = element }} className={`feature-card${remoteTarget === target ? ' remote-focus' : ''}`} key={item.id} onClick={() => { setSelected(index); setScreen('monitor'); focusRemoteTarget('nav-monitor') }}><span className="feature-icon" style={{ color: item.accent }}><ItemIcon size={24} /></span><span className="feature-kicker">{severityCopy[item.severity]}</span><strong>{item.title}</strong><small>{item.location}</small><span className="feature-arrow"><ArrowUpRight size={16} /></span></button> })}</div>
+        <div className="home-section-heading"><div><span className="eyebrow">SIGNALBRIDGE LIBRARY</span><h2>Trending alerts</h2></div><button className="subtle-button" onClick={() => setScreen('history')}>View all <ChevronRight size={14} /></button></div>
+        <div className="home-rail">{alerts.map((item, index) => { const target = ['home-tornado', 'home-flood', 'home-shelter'][index] as RemoteTarget; const cardArtwork = ['/signalbridge-tornado-card.png', '/signalbridge-flood-card.png', '/signalbridge-community-card.png'][index]; return <button ref={(element) => { remoteRefs.current[target] = element }} className={`feature-card${remoteTarget === target ? ' remote-focus' : ''}`} key={item.id} style={{ backgroundImage: `linear-gradient(0deg, rgba(4, 5, 12, .96), rgba(5, 6, 14, .05) 72%), url(${cardArtwork})` }} onClick={() => { setSelected(index); focusRemoteTarget(target) }}><span className="feature-kicker">{severityCopy[item.severity]}</span><strong>{item.label}</strong><small>{item.location}</small><span className="feature-arrow"><ArrowUpRight size={16} /></span></button> })}</div>
       </section>
 
       <section className="settings-screen" style={{ display: screen === 'settings' ? 'block' : 'none' }}>

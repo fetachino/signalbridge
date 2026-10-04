@@ -19,9 +19,10 @@ Emergency and public-service information is often presented as small text, short
 
 This first slice is a polished, browser-verifiable TV experience shell. It includes:
 
-- TV-first home screen with a full-bleed severe-weather hero and content rails
+- TV-first home screen modeled on a streaming-TV layout: persistent left drawer, full-bleed severe-weather hero, and image-led poster rail
 - Primary navigation for Home, Live Monitor, and Alert History
-- Remote-friendly, focusable actions with a clear D-pad focus model
+- Remote-friendly, focusable actions with a clear D-pad focus model and visible focus rings
+- Selecting a poster updates the hero story in place; the hero action opens the live monitor
 - A cinematic live-feed monitor with an alert overlay instead of a dashboard layout
 - Three realistic emergency and community alert scenarios
 - Transparent detection trace with confidence indicators
