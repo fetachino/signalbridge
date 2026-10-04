@@ -177,7 +177,7 @@ function App() {
 
   function focusRemoteTarget(target: RemoteTarget) {
     setRemoteTarget(target)
-    window.requestAnimationFrame(() => remoteRefs.current[target]?.focus())
+    window.requestAnimationFrame(() => remoteRefs.current[target]?.focus({ preventScroll: true }))
   }
 
   useEffect(() => {
@@ -348,22 +348,22 @@ function App() {
       </header>
 
       <nav className={menuOpen ? 'tv-nav open' : 'tv-nav'} aria-label="Primary navigation">
-        <button ref={(element) => { remoteRefs.current['nav-home'] = element }} className={`${screen === 'home' ? 'nav-item active' : 'nav-item'}${remoteTarget === 'nav-home' ? ' remote-focus' : ''}`} onClick={() => { setScreen('home'); setMenuOpen(false) }}><LayoutGrid size={17} /> Home</button>
-        <button ref={(element) => { remoteRefs.current['nav-monitor'] = element }} className={`${screen === 'monitor' ? 'nav-item active' : 'nav-item'}${remoteTarget === 'nav-monitor' ? ' remote-focus' : ''}`} onClick={() => { setScreen('monitor'); setMenuOpen(false) }}><Radio size={17} /> Live monitor <span className="nav-live" /></button>
-        <button ref={(element) => { remoteRefs.current['nav-history'] = element }} className={`${screen === 'history' ? 'nav-item active' : 'nav-item'}${remoteTarget === 'nav-history' ? ' remote-focus' : ''}`} onClick={() => { setScreen('history'); setMenuOpen(false) }}><Bell size={17} /> Alert history</button>
-        <button ref={(element) => { remoteRefs.current['nav-accessibility'] = element }} className={`${screen === 'settings' ? 'nav-item active' : 'nav-item'}${remoteTarget === 'nav-accessibility' ? ' remote-focus' : ''}`} onClick={() => { setScreen('settings'); setMenuOpen(false) }}><Settings size={17} /> Accessibility</button>
+        <button ref={(element) => { remoteRefs.current['nav-home'] = element }} className={`${screen === 'home' ? 'nav-item active' : 'nav-item'}${remoteTarget === 'nav-home' ? ' remote-focus' : ''}`} onClick={() => { setScreen('home'); setMenuOpen(false); focusRemoteTarget('nav-home') }}><LayoutGrid size={17} /> Home</button>
+        <button ref={(element) => { remoteRefs.current['nav-monitor'] = element }} className={`${screen === 'monitor' ? 'nav-item active' : 'nav-item'}${remoteTarget === 'nav-monitor' ? ' remote-focus' : ''}`} onClick={() => { setScreen('monitor'); setMenuOpen(false); focusRemoteTarget('nav-monitor') }}><Radio size={17} /> Live monitor <span className="nav-live" /></button>
+        <button ref={(element) => { remoteRefs.current['nav-history'] = element }} className={`${screen === 'history' ? 'nav-item active' : 'nav-item'}${remoteTarget === 'nav-history' ? ' remote-focus' : ''}`} onClick={() => { setScreen('history'); setMenuOpen(false); focusRemoteTarget('nav-history') }}><Bell size={17} /> Alert history</button>
+        <button ref={(element) => { remoteRefs.current['nav-accessibility'] = element }} className={`${screen === 'settings' ? 'nav-item active' : 'nav-item'}${remoteTarget === 'nav-accessibility' ? ' remote-focus' : ''}`} onClick={() => { setScreen('settings'); setMenuOpen(false); focusRemoteTarget('nav-accessibility') }}><Settings size={17} /> Accessibility</button>
         <div className="nav-spacer" />
         <span className="nav-hint"><span className="remote-ready-dot" /> REMOTE READY <span className="remote-focus-label">{remoteTargetLabels[remoteTarget]}</span></span>
       </nav>
 
       <section className="home-screen" style={{ display: screen === 'home' ? 'block' : 'none' }}>
         <div className="home-hero">
-          <div className="home-hero-copy"><span className="eyebrow">LIVE SAFETY CHANNEL</span><h1>Weather that speaks clearly.</h1><p>SignalBridge catches critical moments in a live broadcast and turns them into calm, accessible guidance for everyone in the room.</p><div className="home-hero-actions"><button ref={(element) => { remoteRefs.current['home-watch'] = element }} className={`primary-action home-cta${remoteTarget === 'home-watch' ? ' remote-focus' : ''}`} onClick={() => setScreen('monitor')}><Play size={17} fill="currentColor" /> Watch live safety feed</button><span className="hero-meta"><span className="live-dot" /> Monitoring now</span></div></div>
+          <div className="home-hero-copy"><span className="eyebrow">LIVE SAFETY CHANNEL</span><h1>Weather that speaks clearly.</h1><p>SignalBridge catches critical moments in a live broadcast and turns them into calm, accessible guidance for everyone in the room.</p><div className="home-hero-actions"><button ref={(element) => { remoteRefs.current['home-watch'] = element }} className={`primary-action home-cta${remoteTarget === 'home-watch' ? ' remote-focus' : ''}`} onClick={() => { setScreen('monitor'); focusRemoteTarget('nav-monitor') }}><Play size={17} fill="currentColor" /> Watch live safety feed</button><span className="hero-meta"><span className="live-dot" /> Monitoring now</span></div></div>
           <div className="home-hero-art"><div className="hero-ring ring-one" /><div className="hero-ring ring-two" /><div className="hero-signal"><Waves size={40} /><span>ALERT<br />READY</span></div><div className="hero-chip chip-top"><ShieldCheck size={14} /> Source verified</div><div className="hero-chip chip-bottom"><Volume2 size={14} /> Spoken guidance</div></div>
         </div>
         <div className="home-metrics"><div><Gauge size={18} /><strong>98.4%</strong><span>signal readability</span></div><div><Accessibility size={18} /><strong>3 modes</strong><span>visual, caption, voice</span></div><div><CheckCircle2 size={18} /><strong>Verified</strong><span>source-aware guidance</span></div></div>
         <div className="home-section-heading"><div><span className="eyebrow">SIGNALBRIDGE LIBRARY</span><h2>Designed around real moments</h2></div><button className="subtle-button" onClick={() => setScreen('history')}>View all <ChevronRight size={14} /></button></div>
-        <div className="home-rail">{alerts.map((item, index) => { const ItemIcon = item.icon; const target = ['home-tornado', 'home-flood', 'home-shelter'][index] as RemoteTarget; return <button ref={(element) => { remoteRefs.current[target] = element }} className={`feature-card${remoteTarget === target ? ' remote-focus' : ''}`} key={item.id} onClick={() => { setSelected(index); setScreen('monitor') }}><span className="feature-icon" style={{ color: item.accent }}><ItemIcon size={24} /></span><span className="feature-kicker">{severityCopy[item.severity]}</span><strong>{item.title}</strong><small>{item.location}</small><span className="feature-arrow"><ArrowUpRight size={16} /></span></button> })}</div>
+        <div className="home-rail">{alerts.map((item, index) => { const ItemIcon = item.icon; const target = ['home-tornado', 'home-flood', 'home-shelter'][index] as RemoteTarget; return <button ref={(element) => { remoteRefs.current[target] = element }} className={`feature-card${remoteTarget === target ? ' remote-focus' : ''}`} key={item.id} onClick={() => { setSelected(index); setScreen('monitor'); focusRemoteTarget('nav-monitor') }}><span className="feature-icon" style={{ color: item.accent }}><ItemIcon size={24} /></span><span className="feature-kicker">{severityCopy[item.severity]}</span><strong>{item.title}</strong><small>{item.location}</small><span className="feature-arrow"><ArrowUpRight size={16} /></span></button> })}</div>
       </section>
 
       <section className="settings-screen" style={{ display: screen === 'settings' ? 'block' : 'none' }}>
@@ -403,8 +403,7 @@ function App() {
           <div className="video-controls">
             <button className="play-button" onClick={() => setPlaying(!playing)} aria-label={playing ? 'Pause feed' : 'Play feed'}>{playing ? <Pause size={17} /> : <Play size={17} />}</button>
             <div className="timeline"><span className="timeline-fill" /><span className="timeline-thumb" /></div>
-            <span className="control-label">Alert scan {playing ? 'running' : 'paused'}</span>
-            <button ref={(element) => { remoteRefs.current.scan = element }} className={`scan-button${remoteTarget === 'scan' ? ' remote-focus' : ''}`} onClick={scanFrame} disabled={scanState === 'scanning'}><Search size={13} /> {scanState === 'scanning' ? 'Scanning frame' : 'Scan frame'}</button>
+            <span className="control-label">Live signal {playing ? 'active' : 'paused'}</span>
             <button className="subtle-button" onClick={() => setShowDetails(!showDetails)}>{showDetails ? 'Hide' : 'Show'} overlay</button>
           </div>
           {frameAnalysis && <div className="frame-analysis" aria-live="polite"><span className="frame-analysis-label"><Sparkles size={13} /> {frameAnalysis.engine === 'opencv' ? 'OPENCV CANNY' : 'CANVAS FALLBACK'}</span><span><b>{frameAnalysis.edgeDensity}%</b> edge density</span><span><b>{frameAnalysis.textContrast}%</b> text contrast</span><span><b>{frameAnalysis.signalScore}%</b> signal score</span><span className="frame-time">{frameAnalysis.processingMs} ms</span></div>}
@@ -420,6 +419,7 @@ function App() {
           <div className="location-line"><MapPin size={16} /> {alert.location} <span className="bullet">•</span> Issued {alert.issued}</div>
           <div className="action-box"><span className="action-label">RECOMMENDED ACTION</span><p>{alert.action}</p></div>
           <div className="card-actions">
+            <button ref={(element) => { remoteRefs.current.scan = element }} className={`scan-button alert-scan${remoteTarget === 'scan' ? ' remote-focus' : ''}`} onClick={scanFrame} disabled={scanState === 'scanning'}><Search size={15} /> {scanState === 'scanning' ? 'Scanning' : 'Scan frame'}</button>
             <button ref={(element) => { remoteRefs.current['read-aloud'] = element }} className={`primary-action${remoteTarget === 'read-aloud' ? ' remote-focus' : ''}`} onClick={speakAlert}><Volume2 size={18} /> {spoken ? 'Playing guidance' : 'Read this aloud'}</button>
             <button ref={(element) => { remoteRefs.current['large-text'] = element }} className={`${largeText ? 'secondary-action active' : 'secondary-action'}${remoteTarget === 'large-text' ? ' remote-focus' : ''}`} onClick={() => setLargeText(!largeText)}><Eye size={17} /> Large text</button>
           </div>
