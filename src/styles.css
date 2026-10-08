@@ -229,6 +229,24 @@ body { background: radial-gradient(circle at 80% -15%, rgba(70, 65, 134, .32), t
 .home-hero-copy p { max-width: 510px; margin: 0; color: #e4e4ec; font-size: 14px; line-height: 1.55; }
 .home-hero-art { display: none; }
 .home-hero-actions { display: flex; align-items: center; gap: 18px; margin-top: 20px; }
+.home-details-cta { display: inline-flex; align-items: center; gap: 8px; }
+.details-screen { max-width: 1680px; margin: 17px auto 0; }
+.details-hero { min-height: 480px; border-radius: 28px; background-position: center; background-size: cover; position: relative; overflow: hidden; display: flex; align-items: flex-end; }
+.details-hero::after { content: ''; position: absolute; inset: 0; background: linear-gradient(90deg, rgba(5, 6, 14, .96) 0%, rgba(5, 6, 14, .72) 43%, rgba(5, 6, 14, .12) 100%), linear-gradient(0deg, rgba(5, 6, 14, .9), transparent 65%); }
+.details-copy { position: relative; z-index: 1; max-width: 700px; padding: 58px; }
+.details-copy h1 { font-size: clamp(54px, 6vw, 92px); line-height: .94; margin: 12px 0 8px; letter-spacing: -.055em; }
+.details-copy h2 { color: #ff8276; font-size: 17px; letter-spacing: .16em; margin: 0 0 22px; }
+.details-copy p { color: #d8d7e5; font-size: 20px; line-height: 1.45; max-width: 620px; }
+.details-meta { display: flex; flex-wrap: wrap; gap: 14px 22px; color: #dddaf2; margin: 28px 0; }
+.details-meta span { display: inline-flex; align-items: center; gap: 8px; }
+.detail-open { display: inline-flex; align-items: center; gap: 10px; }
+.details-grid { display: grid; grid-template-columns: 1.3fr .7fr; gap: 18px; margin-top: 18px; }
+.details-panel { border: 1px solid rgba(255,255,255,.12); background: linear-gradient(135deg, rgba(27, 28, 48, .9), rgba(11, 12, 23, .95)); border-radius: 20px; padding: 28px; }
+.details-panel h2 { font-size: 28px; line-height: 1.2; margin: 12px 0; max-width: 720px; }
+.details-panel p { color: #a8a6bc; line-height: 1.55; max-width: 700px; }
+.detail-stat { display: inline-flex; flex-direction: column; margin: 14px 32px 0 0; }
+.detail-stat strong { font-size: 34px; color: #f8f7ff; }
+.detail-stat span { color: #a8a6bc; }
 .home-cta { min-height: 45px; padding: 0 18px; border-radius: 13px; color: #141321; background: #f4f2ff; font-size: 12px; box-shadow: 0 11px 28px rgba(0, 0, 0, .3); }
 .hero-meta { display: flex; align-items: center; gap: 10px; color: #dedee8; font-size: 13px; font-weight: 700; }
 .home-metrics { display: none; }

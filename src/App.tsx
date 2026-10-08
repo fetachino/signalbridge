@@ -109,12 +109,14 @@ type RemoteTarget =
   | 'nav-history'
   | 'nav-accessibility'
   | 'home-watch'
+  | 'home-details'
   | 'home-tornado'
   | 'home-flood'
   | 'home-shelter'
   | 'scan'
   | 'read-aloud'
   | 'large-text'
+  | 'detail-open'
 
 const remoteTargetLabels: Record<RemoteTarget, string> = {
   'nav-home': 'Home',
@@ -122,16 +124,18 @@ const remoteTargetLabels: Record<RemoteTarget, string> = {
   'nav-history': 'Alert history',
   'nav-accessibility': 'Accessibility',
   'home-watch': 'Watch live safety feed',
+  'home-details': 'Open alert details',
   'home-tornado': 'Tornado warning story',
   'home-flood': 'Flood watch story',
   'home-shelter': 'Community notice story',
   scan: 'Scan frame',
   'read-aloud': 'Read this aloud',
   'large-text': 'Large text',
+  'detail-open': 'Open live monitor',
 }
 
 function App() {
-  const [screen, setScreen] = useState<'home' | 'monitor' | 'history' | 'settings'>('home')
+  const [screen, setScreen] = useState<'home' | 'details' | 'monitor' | 'history' | 'settings'>('home')
   const [menuOpen, setMenuOpen] = useState(false)
   const [selected, setSelected] = useState(0)
   const [playing, setPlaying] = useState(true)
@@ -153,12 +157,14 @@ function App() {
     'nav-history': null,
     'nav-accessibility': null,
     'home-watch': null,
+    'home-details': null,
     'home-tornado': null,
     'home-flood': null,
     'home-shelter': null,
     scan: null,
     'read-aloud': null,
     'large-text': null,
+    'detail-open': null,
   })
   const alert = alerts[selected]
   const Icon = alert.icon
@@ -187,9 +193,12 @@ function App() {
       const isRight = event.key === 'ArrowRight' || event.key === 'Right' || event.keyCode === 39
       const isDown = event.key === 'ArrowDown' || event.key === 'Down' || event.keyCode === 40
       const navTargets: RemoteTarget[] = ['nav-home', 'nav-monitor', 'nav-history', 'nav-accessibility']
-      const homeTargets: RemoteTarget[] = ['home-watch', 'home-tornado', 'home-flood', 'home-shelter']
+      const homeTargets: RemoteTarget[] = ['home-watch', 'home-details', 'home-tornado', 'home-flood', 'home-shelter']
       const monitorTargets: RemoteTarget[] = ['scan', 'read-aloud', 'large-text']
-      const activeTargets = homeTargets.includes(remoteTarget)
+      const detailTargets: RemoteTarget[] = ['detail-open']
+      const activeTargets = detailTargets.includes(remoteTarget)
+        ? detailTargets
+        : homeTargets.includes(remoteTarget)
         ? homeTargets
         : monitorTargets.includes(remoteTarget)
           ? monitorTargets
@@ -246,6 +255,10 @@ function App() {
           setScreen('monitor')
           focusRemoteTarget('nav-monitor')
         }
+        if (remoteTarget === 'home-details') {
+          setScreen('details')
+          focusRemoteTarget('detail-open')
+        }
         if (remoteTarget === 'home-tornado') {
           setSelected(0)
           focusRemoteTarget('home-tornado')
@@ -257,6 +270,10 @@ function App() {
         if (remoteTarget === 'home-shelter') {
           setSelected(2)
           focusRemoteTarget('home-shelter')
+        }
+        if (remoteTarget === 'detail-open') {
+          setScreen('monitor')
+          focusRemoteTarget('nav-monitor')
         }
         if (remoteTarget === 'scan') scanFrame()
         if (remoteTarget === 'read-aloud') speakAlert()
@@ -357,11 +374,18 @@ function App() {
 
       <section className="home-screen" style={{ display: screen === 'home' ? 'block' : 'none' }}>
         <div className="home-hero" style={{ backgroundImage: `url(${artwork})` }}>
-          <div className="home-hero-copy"><span className="eyebrow">{severityCopy[alert.severity]} · LIVE BROADCAST</span><h1>{alert.label === 'TORNADO WARNING' ? 'Tornado warning detected.' : alert.title + '.'}</h1><p>{alert.summary} SignalBridge turns the broadcast into clear, accessible guidance for everyone in the room.</p><div className="home-hero-actions"><button ref={(element) => { remoteRefs.current['home-watch'] = element }} className={`primary-action home-cta${remoteTarget === 'home-watch' ? ' remote-focus' : ''}`} onClick={() => { setScreen('monitor'); focusRemoteTarget('nav-monitor') }}><Play size={17} fill="currentColor" /> Watch live safety feed</button><span className="hero-meta"><span className="live-dot" /> Monitoring now</span></div></div>
+          <div className="home-hero-copy"><span className="eyebrow">{severityCopy[alert.severity]} · LIVE BROADCAST</span><h1>{alert.label === 'TORNADO WARNING' ? 'Tornado warning detected.' : alert.title + '.'}</h1><p>{alert.summary} SignalBridge turns the broadcast into clear, accessible guidance for everyone in the room.</p><div className="home-hero-actions"><button ref={(element) => { remoteRefs.current['home-watch'] = element }} className={`primary-action home-cta${remoteTarget === 'home-watch' ? ' remote-focus' : ''}`} onClick={() => { setScreen('monitor'); focusRemoteTarget('nav-monitor') }}><Play size={17} fill="currentColor" /> Watch live safety feed</button><button ref={(element) => { remoteRefs.current['home-details'] = element }} className={`secondary-action home-details-cta${remoteTarget === 'home-details' ? ' remote-focus' : ''}`} onClick={() => { setScreen('details'); focusRemoteTarget('detail-open') }}>View alert details <ArrowUpRight size={16} /></button><span className="hero-meta"><span className="live-dot" /> Monitoring now</span></div></div>
           <div className="home-hero-meta"><span><ShieldCheck size={15} /> Source verified</span><span><Volume2 size={15} /> Spoken guidance ready</span><span><MapPin size={15} /> {alert.location}</span></div>
         </div>
         <div className="home-section-heading"><div><span className="eyebrow">SIGNALBRIDGE LIBRARY</span><h2>Trending alerts</h2></div><button className="subtle-button" onClick={() => setScreen('history')}>View all <ChevronRight size={14} /></button></div>
         <div className="home-rail">{alerts.map((item, index) => { const target = ['home-tornado', 'home-flood', 'home-shelter'][index] as RemoteTarget; const cardArtwork = ['/signalbridge-tornado-card.png', '/signalbridge-flood-card.png', '/signalbridge-community-card.png'][index]; return <button ref={(element) => { remoteRefs.current[target] = element }} className={`feature-card${remoteTarget === target ? ' remote-focus' : ''}`} key={item.id} style={{ backgroundImage: `linear-gradient(0deg, rgba(4, 5, 12, .96), rgba(5, 6, 14, .05) 72%), url(${cardArtwork})` }} onClick={() => { setSelected(index); focusRemoteTarget(target) }}><span className="feature-kicker">{severityCopy[item.severity]}</span><strong>{item.label}</strong><small>{item.location}</small><span className="feature-arrow"><ArrowUpRight size={16} /></span></button> })}</div>
+      </section>
+
+      <section className="details-screen" style={{ display: screen === 'details' ? 'block' : 'none' }}>
+        <div className="details-hero" style={{ backgroundImage: `url(${artwork})` }}>
+          <div className="details-copy"><span className="eyebrow">{severityCopy[alert.severity]} · ALERT DETAILS</span><h1>{alert.title}</h1><h2>{alert.label}</h2><p>{alert.summary}</p><div className="details-meta"><span><MapPin size={15} /> {alert.location}</span><span><ShieldCheck size={15} /> {alert.confidence}% verified confidence</span><span><Volume2 size={15} /> Guidance available</span></div><button ref={(element) => { remoteRefs.current['detail-open'] = element }} className={`primary-action detail-open${remoteTarget === 'detail-open' ? ' remote-focus' : ''}`} onClick={() => { setScreen('monitor'); focusRemoteTarget('nav-monitor') }}><Radio size={17} /> Open live monitor <ArrowUpRight size={16} /></button></div>
+        </div>
+        <div className="details-grid"><div className="details-panel"><span className="eyebrow">RECOMMENDED ACTION</span><h2>{alert.action}</h2><p>SignalBridge keeps the source, urgency, timing, and next step together so everyone in the room can understand what to do.</p></div><div className="details-panel"><span className="eyebrow">WHY IT MATTERS</span><div className="detail-stat"><strong>{alert.confidence}%</strong><span>confidence</span></div><div className="detail-stat"><strong>{alert.expires}</strong><span>valid until</span></div></div></div>
       </section>
 
       <section className="settings-screen" style={{ display: screen === 'settings' ? 'block' : 'none' }}>
